@@ -1,12 +1,12 @@
 # stdroller
 
-# to build
+## to build
     make
 
-# to run
+## to run
     some_cmd | ./stdroller -f some_file_name
     
-# currently supported options
+## currently supported options
 
     
     usage:
