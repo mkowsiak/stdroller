@@ -1,12 +1,14 @@
 # stdroller
 
-## to build
+Simple tool to roll over the logs. You can use it to redirect your stdout/stderr and create rolling log file.
+
+### to build
     make
 
-## to run
+### to run
     some_cmd | ./stdroller -f some_file_name
     
-## currently supported options
+### currently supported options
 
     
     usage:
