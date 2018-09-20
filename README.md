@@ -8,8 +8,10 @@
     
 # currently supported options
 
+    
     usage:
-      stdroller -f file_name|--file=file_name [--sufix|-s] [-r|--rollover] [--limit|-l] [--help|-h]
+      stdroller --file=file_name|-f file_name [--sufix|-s] [--limit=size|-l size]
+                                              [--help|-h] [--rollover|-r]
     
     options:
     
