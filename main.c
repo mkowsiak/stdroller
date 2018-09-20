@@ -28,6 +28,7 @@ char *suffix_file_name(char *suffix, char *file_name, char suffix1st, char suffi
 }
 
 void display_usage() {
+  printf("                                                                               \n");
   printf("usage:                                                                         \n");
   printf("  stdroller -f file_name|--file=file_name [--sufix|-s] [--limit|-l] [--help|-h]\n");
   printf("                                                                               \n");
@@ -63,17 +64,17 @@ void get_options(int argc, char **argv) {
   int c;
   char *next_idx = NULL;
 
-  while (1) {
-    static struct option long_options[] = {
-      { "suffix", no_argument, 0, 's' },
-      { "limit",  required_argument, 0, 'l' },
-      { "file",  required_argument, 0, 'f'},
-      { "rollover", no_argument, 0, 'r' },
-      { "help", no_argument, 0, 'h' },
-      { 0, 0, 0, 0}
-    };
-    int option_index = 0;
+  static struct option long_options[] = {
+    { "suffix", no_argument, 0, 's' },
+    { "limit",  required_argument, 0, 'l' },
+    { "file",  required_argument, 0, 'f'},
+    { "rollover", no_argument, 0, 'r' },
+    { "help", no_argument, 0, 'h' },
+    { 0, 0, 0, 0}
+  };
+  int option_index = 0;
 
+  while (1) {
     c = getopt_long (argc, argv, "srl:f:h?",
                      long_options, &option_index);
 
