@@ -30,7 +30,8 @@ char *suffix_file_name(char *suffix, char *file_name, char suffix1st, char suffi
 void display_usage() {
   printf("                                                                               \n");
   printf("usage:                                                                         \n");
-  printf("  stdroller -f file_name|--file=file_name [--sufix|-s] [--limit|-l] [--help|-h]\n");
+  printf("  stdroller --file=file_name|-f file_name [--sufix|-s] [--limit=size|-l size]  \n");
+  printf("                                          [--help|-h] [--rollover|-r]          \n");
   printf("                                                                               \n");
   printf("options:                                                                       \n");
   printf("                                                                               \n");
