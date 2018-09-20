@@ -4,7 +4,7 @@
     make
 
 # to run
-    some_cmd | -f ./stdroller some_file_name
+    some_cmd | ./stdroller -f some_file_name
     
 # currently supported options
 
