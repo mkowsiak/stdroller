@@ -203,7 +203,7 @@ int main(int argc, char **argv) {
           fseek(fp, 0, 0);
         }
       } 
-      if((fp = fopen(file_name, "w")) == NULL) {
+      if( fp == NULL ) {
         fprintf(stderr, "I can't open output file: %s\n", file_name);
         exit(1);
       }
