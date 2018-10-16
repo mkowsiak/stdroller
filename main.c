@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
+#include <math.h>
 
 #define I_AM_OH_SO_BIG 1000000000 // currently, I support 1GB as log file limit
                                   // at the same time, I am creating aa-zz suffixes
@@ -90,6 +91,41 @@ void get_options(int argc, char **argv) {
 
       case 'l':
         limit = strtoull( optarg, &next_idx, 10 );
+        if( *next_idx != '\0' ) {
+          if( *(next_idx + 1) != '\0') {
+            printf("You can't specify more than one character as prefix.\n");
+            printf("You can only use: k/K, m/M, g/G, t/T, p/P\n");
+            printf("You have specified: %s\n", next_idx);
+            exit(1);
+          } else {
+            switch( *next_idx ) {
+              case 'K':
+	      case 'k': 
+                limit *= pow(10,3);
+                break;
+              case 'M':
+              case 'm':
+                limit *= pow(10,6);
+                break;
+              case 'G':
+              case 'g':
+                limit *= pow(10,9);
+                break; 
+              case 'T':
+              case 't':
+                limit *= pow(10,12);
+                break;
+              case 'P':
+              case 'p':
+                limit *= pow(10,15);
+                break;
+              default:
+                printf("It looks like you have passed some strange prefix in SI\n");
+                printf("You have passed '%c' - I don't get it :(\n", *next_idx);
+                exit(1); 
+            }
+          }
+        }
         if( limit == 0 ) {
           printf("Either you have passed some crazy value or 0\n");
           printf("In both cases, it makes no sense for me to proceed\n");
