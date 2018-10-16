@@ -49,8 +49,8 @@ void display_usage() {
   printf("                        no nothing.                                            \n");
   printf("                                                                               \n");
   printf("  -l limit                                                                     \n");
-  printf("  --limit=limit       - Log size limit; default is 1GB. Unfortunately          \n");
-  printf("                        you have to specify full size, like 1000000000 for 1GB \n");
+  printf("  --limit=limit       - Log size limit; default is 1GB. You can use SI prefixes\n");
+  printf("                        to specify the size of file, e.g.: 10K, 21k, 10G, etc. \n");
   printf("                                                                               \n");
   printf("  -r                                                                           \n");
   printf("  --rollover          - If you set roll over flag, I will not destroy content  \n");
