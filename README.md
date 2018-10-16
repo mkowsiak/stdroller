@@ -10,7 +10,6 @@ Simple tool to roll over the logs. You can use it to redirect your stdout/stderr
     
 ### currently supported options
 
-    
     usage:
       stdroller --file=file_name|-f file_name [--sufix|-s] [--limit=size|-l size]
                                               [--help|-h] [--rollover|-r]
@@ -30,8 +29,8 @@ Simple tool to roll over the logs. You can use it to redirect your stdout/stderr
                             no nothing.
     
       -l limit
-      --limit=limit       - Log size limit; default is 1GB. Unfortunately
-                            you have to specify full size, like 1000000000 for 1GB
+      --limit=limit       - Log size limit; default is 1GB. You can use SI prefixes
+                            to specify the size of file, e.g.: 10K, 21k, 10G, etc.
     
       -r
       --rollover          - If you set roll over flag, I will not destroy content
@@ -39,4 +38,4 @@ Simple tool to roll over the logs. You can use it to redirect your stdout/stderr
                             are the one to decide which log style you prefer
     
       -h
-      --help              - surprize, surprize! I will show you help message.
+      --help              - surprize, surprize! I will show you help message.    
