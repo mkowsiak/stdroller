@@ -91,6 +91,13 @@ void get_options(int argc, char **argv) {
 
       case 'l':
         limit = strtoull( optarg, &next_idx, 10 );
+
+        if( limit == 0 ) {
+          printf("Either you have passed some crazy value or 0\n");
+          printf("In both cases, it makes no sense for me to proceed\n");
+          exit(1);
+        }
+
         if( *next_idx != '\0' ) {
           if( *(next_idx + 1) != '\0') {
             printf("You can't specify more than one character as prefix.\n");
@@ -125,11 +132,6 @@ void get_options(int argc, char **argv) {
                 exit(1); 
             }
           }
-        }
-        if( limit == 0 ) {
-          printf("Either you have passed some crazy value or 0\n");
-          printf("In both cases, it makes no sense for me to proceed\n");
-          exit(1);
         }
         break;
       
