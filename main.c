@@ -21,6 +21,7 @@ static unsigned long long limit  = 0;      // in case limit is not passed i will
                                            // I_AM_OH_SO_BIG value
 static char *file_name           = NULL;   // file name for log
 static int roll_over             = 0;      // should I start writing the log from the top?
+static int new_line_flush        = 0;      // should I flush on new line character?
 
 char *suffix_file_name(char *suffix, char *file_name, char suffix1st, char suffix2nd) {
   strcpy(suffix, file_name);
@@ -35,13 +36,14 @@ char *suffix_file_name(char *suffix, char *file_name, char suffix1st, char suffi
 void display_usage() {
   printf("                                                                               \n");
   printf("usage:                                                                         \n");
-  printf("  stdroller --file=file_name|-f file_name [--sufix|-s] [--limit=size|-l size]  \n");
-  printf("                                          [--help|-h] [--rollover|-r]          \n");
+  printf("  stdroller -f file_name|--file=file_name [-s|--sufix] [-l size|--limit=size]  \n");
+  printf("                                          [-r|--rollover] [-n|--newline]       \n");
+  printf("                                          [-h|--help]                          \n");
   printf("                                                                               \n");
   printf("options:                                                                       \n");
   printf("                                                                               \n");
   printf("  -f file_name                                                                 \n");
-  printf("  --file=file_name    - File name where log will be stored                     \n");
+  printf("  --file=file_name    - File name where log will be stored.                    \n");
   printf("                                                                               \n");
   printf("  -s                                                                           \n"); 
   printf("  --sufix             - Should I create suffix files or not?                   \n");
@@ -59,10 +61,12 @@ void display_usage() {
   printf("  -r                                                                           \n");
   printf("  --rollover          - If you set roll over flag, I will not destroy content  \n");
   printf("                        However, tail -F will not work in this case. So, you   \n");
-  printf("                        are the one to decide which log style you prefer       \n");
+  printf("                        are the one to decide which log style you prefer.      \n");
+  printf("  -n                                                                           \n");
+  printf("  --newline           - Flush on new line instead of number of characters.     \n");
   printf("                                                                               \n");
   printf("  -h                                                                           \n");
-  printf("  --help              - surprize, surprize! I will show you help message.      \n");
+  printf("  --help              - Surprize, surprize! I will show you help message.      \n");
   exit(1);
 }
 
@@ -75,6 +79,7 @@ void get_options(int argc, char **argv) {
     { "limit",  required_argument, 0, 'l' },
     { "file",  required_argument, 0, 'f'},
     { "rollover", no_argument, 0, 'r' },
+    { "newline", no_argument, 0, 'n' },
     { "help", no_argument, 0, 'h' },
     { 0, 0, 0, 0}
   };
@@ -142,14 +147,18 @@ void get_options(int argc, char **argv) {
       case 'f':
         file_name = optarg;
         break;
+     
+      case 'r':
+        roll_over = 1;
+        break;
+
+     case 'n':
+        new_line_flush = 1;
+        break;
       
       case 'h':
       case '?':
         display_usage();
-        break;
-
-      case 'r':
-        roll_over = 1;
         break;
 
       default:
@@ -167,6 +176,7 @@ int main(int argc, char **argv) {
   char curr_suffix_first       = 'a';   // current index at first digit
   char curr_suffix_second      = 'a';   // current index at second digit
   int c                        = 0;     // character read from stdin
+  int perform_flush_flag       = 0;     // should I flush data
 
   get_options(argc, argv); 
 
@@ -207,6 +217,11 @@ int main(int argc, char **argv) {
   }
 
   while((c = getc(stdin)) != EOF) {
+
+    if( new_line_flush == 1 && c == '\n' ) {
+      perform_flush_flag = 1;
+    } 
+
     // instead of copying file to another location (after limit is reached)
     // I write into oryginal log and suffix log at the same time
     if(fputc(c, fp) == EOF) {
@@ -225,20 +240,23 @@ int main(int argc, char **argv) {
     // I don't think it's reasonable to check flush overflow in case
     // we already know that limit is lesser than that
     // If it's equal to FLUSH_OVERFLOW, we will flush anyway as
-    // we are reopening files
-    if( limit > FLUSH_OVERFLOW) {
-      if( (pos % FLUSH_OVERFLOW) == 0) {
-        if(fflush(fp) == EOF) {
-          fprintf(stderr, "I can't flush output file: %s\n", file_name);
-          exit(1);
-        }
-        if(fp_suffix != NULL) {
-          if(fflush(fp_suffix) == EOF) {
-	    fprintf(stderr, "I can't flush suffix file: %s\n", suffix);
-            exit(1);
-	  }
-        } 
+    // we are reopening files; I don't flush if we use new line based flush
+    if( new_line_flush == 0 && limit > FLUSH_OVERFLOW && (pos % FLUSH_OVERFLOW) == 0 ) {
+      perform_flush_flag = 1;
+    }
+
+    if( perform_flush_flag ) {
+      perform_flush_flag = 0;
+      if(fflush(fp) == EOF) {
+        fprintf(stderr, "I can't flush output file: %s\n", file_name);
+        exit(1);
       }
+      if(fp_suffix != NULL) {
+        if(fflush(fp_suffix) == EOF) {
+          fprintf(stderr, "I can't flush suffix file: %s\n", suffix);
+          exit(1);
+	}
+      } 
     }
 
     if(pos >= limit) {

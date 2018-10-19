@@ -11,13 +11,14 @@ Simple tool to roll over the logs. You can use it to redirect your stdout/stderr
 ### currently supported options
 
     usage:
-      stdroller --file=file_name|-f file_name [--sufix|-s] [--limit=size|-l size]
-                                              [--help|-h] [--rollover|-r]
+      stdroller -f file_name|--file=file_name [-s|--sufix] [-l size|--limit=size]
+                                              [-r|--rollover] [-n|--newline]
+                                              [-h|--help]
     
     options:
     
       -f file_name
-      --file=file_name    - File name where log will be stored
+      --file=file_name    - File name where log will be stored.
     
       -s
       --sufix             - Should I create suffix files or not?
@@ -35,7 +36,9 @@ Simple tool to roll over the logs. You can use it to redirect your stdout/stderr
       -r
       --rollover          - If you set roll over flag, I will not destroy content
                             However, tail -F will not work in this case. So, you
-                            are the one to decide which log style you prefer
+                            are the one to decide which log style you prefer.
+      -n
+      --newline           - Flush on new line instead of number of characters.
     
       -h
-      --help              - surprize, surprize! I will show you help message.    
+      --help              - Surprize, surprize! I will show you help message.
