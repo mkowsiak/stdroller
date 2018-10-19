@@ -86,7 +86,7 @@ void get_options(int argc, char **argv) {
   int option_index = 0;
 
   while (1) {
-    c = getopt_long (argc, argv, "srl:f:h?",
+    c = getopt_long (argc, argv, "srnl:f:h?",
                      long_options, &option_index);
 
     /* Detect the end of the options. */
