@@ -11,6 +11,10 @@
                                   // I need suffix files because I want to make
                                   // tail -F to be happy with main log file
 
+#define FLUSH_OVERFLOW 1024       // we want to flush each 1024 characters
+                                  // in case limit size is lesser than that
+                                  // we don't care as fclose will flush anyway
+
 /* get opts flags */
 static int use_suffix            = 0;      // should we create sufix files or not
 static unsigned long long limit  = 0;      // in case limit is not passed i will use
@@ -217,6 +221,26 @@ int main(int argc, char **argv) {
     }
 
     pos++;
+
+    // I don't think it's reasonable to check flush overflow in case
+    // we already know that limit is lesser than that
+    // If it's equal to FLUSH_OVERFLOW, we will flush anyway as
+    // we are reopening files
+    if( limit > FLUSH_OVERFLOW) {
+      if( (pos % FLUSH_OVERFLOW) == 0) {
+        if(fflush(fp) == EOF) {
+          fprintf(stderr, "I can't flush output file: %s\n", file_name);
+          exit(1);
+        }
+        if(fp_suffix != NULL) {
+          if(fflush(fp_suffix) == EOF) {
+	    fprintf(stderr, "I can't flush suffix file: %s\n", suffix);
+            exit(1);
+	  }
+        } 
+      }
+    }
+
     if(pos >= limit) {
 
       // once limit is hit:
